@@ -1,26 +1,17 @@
 "use client";
 
-import { verifyToken } from "@/lib/auth";
-import { UserTypes } from "@/types/Users";
-import { authVerify } from "@/utils/authVerify";
-import { useEffect, useState } from "react";
+import { AuthContext } from "@/context/authContext";
+import { useContext } from "react";
+import Link from "next/link";
 
 export default function Dashboard() {
-  const [userData, setUserData] = useState<UserTypes | null>(null)
-
-  useEffect(() => {
-    async function getData(){
-      const response = await authVerify()
-      const data = await response.json()
-      setUserData(data)
-    }
-    getData()
-  }, [])
+  const authContext = useContext(AuthContext);
+  const data = authContext?.data;
+  const setData = authContext?.setData;
   return (
     <>
-      <div>
-        {userData?.status}
-      </div>
+      <div>{data?.email}</div>
+      <Link href="/about">About</Link>
     </>
-  )
+  );
 }

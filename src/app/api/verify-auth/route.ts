@@ -9,10 +9,18 @@ export async function POST(request: Request) {
     const { token } = storedToken;
     const conn = await getConnection();
 
-    const decoded = (await verifyToken(token)) as decodedToken;
-    const [rows] = await conn.query<RowDataPacket[]>("SELECT * FROM users_tbl WHERE id = ?", decoded.id)
+    let decoded: decodedToken;
+    try {
+      decoded = (await verifyToken(token)) as decodedToken;
+    } catch (err) {
+      return Response.json({ message: "Invalid or expired token" }, {status : 401})
+    }
+    const [rows] = await conn.query<RowDataPacket[]>(
+      "SELECT * FROM users_tbl WHERE id = ?",
+      decoded.id
+    );
 
-    const user = rows[0]
+    const user = rows[0];
 
     return Response.json(user);
   } catch (err) {

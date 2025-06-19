@@ -8,10 +8,10 @@ type loginVal = {
   password: string;
 };
 
-const {setData} = useContext(AuthContext)!;
-
 export default function Home() {
+  const { setData } = useContext(AuthContext)!;
   const router = useRouter();
+
   const [loginVal, setLoginVal] = useState<loginVal>({
     email: "",
     password: "",
@@ -32,8 +32,8 @@ export default function Home() {
 
     const data = await response.json();
     localStorage.setItem("token", data.token);
-    setData(data.data)
-    router.push("/dashboard"); // Change "/dashboard" to your desired route
+    setData(data.data);
+    window.location.href = '/dashboard';
   }
   return (
     <>
